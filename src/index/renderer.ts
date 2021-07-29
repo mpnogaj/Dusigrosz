@@ -1,8 +1,13 @@
 const $ = require('jquery');
 
 $('#getProductBtn').on('click', () => {
-    console.log($('#urlBox').val());
-    getTitle($('#urlBox').val());
+    const url: string = $('#urlBox').val();
+    if(!validateUrl(url)){
+        $('#validate').text('Link jest nieprawidłowy');
+        return;
+    }
+    $('#validate').text('');
+    getTitle(url);
 });
 
 function getHTML(data: string, openingTag: string, closingTag: string): string {
@@ -16,6 +21,15 @@ function getHTML(data: string, openingTag: string, closingTag: string): string {
     return tag.substring(tag.indexOf('>') + 1, tag.lastIndexOf('<'));
 }
 
+function validateUrl(url: string) : boolean{
+    const matches: RegExpMatchArray | null = url.match(/\/\/.*?\//);
+    if(matches != null){
+        const domain = matches[0].substr(2, matches[0].length - 3);
+        if(domain == "www.x-kom.pl") return true;
+        return false;
+    }
+    return false;
+}
 
 function getTitle(url: string) {
     $.ajax({
