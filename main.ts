@@ -1,5 +1,10 @@
 import { app, BrowserWindow } from "electron";
-import * as path from "path"
+import * as path from "path";
+
+try {
+  require('electron-reloader')(module);
+} catch (_) {}
+
 
 let window: BrowserWindow;
 
