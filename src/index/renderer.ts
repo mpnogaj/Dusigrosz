@@ -22,7 +22,8 @@ function getTitle(url: string) {
         url: url,
         async: true,
         success: function (data: string) {
-            $('#productName').text(getHTML(data, '<h1 class="sc-1bker4h-4 driGYx">', '<\/h1>'));
+            const nameHtml = getHTML(data, '<div class="sc-1bker4h-10 bdhgIb">', '<\/div>')
+            $('#productName').text(nameHtml.substring(nameHtml.indexOf('>') + 1, nameHtml.lastIndexOf('<')));
             $('#productPrice').text(getHTML(data, '<div class="u7xnnm-4 jFbqvs">', '<\/div>'));
             const imagesHtml = getHTML(data, '<span class="sc-1tblmgq-0 jiiyfe-2 ldEQXA sc-1tblmgq-3 fHoITM"', '<\/span>');
             $('#productImage').html(imagesHtml.substring(imagesHtml.lastIndexOf('<'), imagesHtml.lastIndexOf('>') + 1));

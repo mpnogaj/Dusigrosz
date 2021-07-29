@@ -2,21 +2,25 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Hello World!</title>
+        <title>Znajdź produkt</title>
         <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="index.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <div class="m-3">
-            <label class="form-label">Link to product: </label> 
-            <input id="urlBox" class="form-control" type="text" placeholder='e.g. "https://www.x-kom.pl/p/586237-procesor-intel-core-i7-intel-core-i7-10700k-avengers-edition.html"'>
-            <a id="getProductBtn" class="mt-3 btn btn-primary">Search</a>
-            <div class="mt-3">
-                <h2>Product: </h2>
-                <span id="productName"></span>
-                <h2>Price: </h2>
-                <span id="productPrice"></span>
-                <h2>Image: </h2>
-                <div id="productImage"></div>
+            <label class="form-label">Link do produktu </label> 
+            <input id="urlBox" class="form-control" type="text" placeholder='np. "https://www.x-kom.pl/p/586237-procesor-intel-core-i7-intel-core-i7-10700k-avengers-edition.html"'>
+            <a id="getProductBtn" class="mt-3 btn btn-primary">Wyszukaj</a>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="productImage"></div>
+                    </div>
+                    <div class="col-md-6 my-auto">
+                        <h2 id="productName"></h2>
+                        <h3 id="productPrice"></h3>
+                    </div>
+                </div>
             </div>
         </div>
         <script defer src="../../dist/src/index/renderer.js" type="module"></script>
