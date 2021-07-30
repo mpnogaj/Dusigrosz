@@ -22,6 +22,8 @@ function getHTML(data: string, openingTag: string, closingTag: string): string {
 }
 
 function validateUrl(url: string) : boolean{
+    if(url.match(/\b(https?|ftp|file):\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|]/) == null) 
+        return false;
     const matches: RegExpMatchArray | null = url.match(/\/\/.*?\//);
     if(matches != null){
         const domain = matches[0].substr(2, matches[0].length - 3);
@@ -41,6 +43,12 @@ function getTitle(url: string) {
             $('#productPrice').text(getHTML(data, '<div class="u7xnnm-4 jFbqvs">', '<\/div>'));
             const imagesHtml = getHTML(data, '<span class="sc-1tblmgq-0 jiiyfe-2 ldEQXA sc-1tblmgq-3 fHoITM"', '<\/span>');
             $('#productImage').html(imagesHtml.substring(imagesHtml.lastIndexOf('<'), imagesHtml.lastIndexOf('>') + 1));
+        },
+        error: function() {
+            $('#productName').text("");
+            $('#productPrice').text("");
+            $('#productImage').html("");
+            $('#validate').text('Link jest nieprawidłowy');
         }
     });
 }
