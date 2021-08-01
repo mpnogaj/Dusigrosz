@@ -1,14 +1,26 @@
-const $ = require('jquery');
+import * as $ from 'jquery';
+import { ipcRenderer } from 'electron';
 
 $('#getProductBtn').on('click', () => {
-    const url: string = $('#urlBox').val();
+    const url: string | number | string[] | undefined = $('#urlBox').val();
     if(!validateUrl(url)){
         $('#validate').text('Link jest nieprawidłowy');
         return;
     }
     $('#validate').text('');
-    getTitle(url);
+    getTitle(url as string);
 });
+
+$('#saveBtn').on('click', async () => {
+    const data = [$('#productName').text(), parseFloat($('#productPrice').text().replace(',', '.'))];
+    console.log(data);
+    await ipcRenderer.invoke('insertData', data);
+    // for testing
+    const dbData: ProductPriceData[] = await ipcRenderer.invoke('getData', [$('#productName').text()]);
+    dbData.forEach((value: ProductPriceData) => {
+        console.log(value);
+    })
+})
 
 function getHTML(data: string, openingTag: string, closingTag: string): string {
     const productError = "Couldn't find product name!";
@@ -21,7 +33,8 @@ function getHTML(data: string, openingTag: string, closingTag: string): string {
     return tag.substring(tag.indexOf('>') + 1, tag.lastIndexOf('<'));
 }
 
-function validateUrl(url: string) : boolean{
+function validateUrl(url: string | number | string[] | undefined) : boolean{
+    if(url == undefined || typeof(url) == 'number' || Array.isArray(url)) return false;
     if(url.match(/\b(https?|ftp|file):\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|]/) == null) 
         return false;
     const matches: RegExpMatchArray | null = url.match(/\/\/.*?\//);
