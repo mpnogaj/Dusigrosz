@@ -36,9 +36,9 @@ app.on('ready', () => {
     window.loadFile(path.join(__dirname, '../src/index/index.html'));
 });
 
-app.on('will-quit', async () => {
+app.on('quit', async () => {
     if(db == null) return;
-    await db.close();
+    //await db.close();
 })
 
 ipcMain.handle('insertData', async (event: Electron.IpcMainInvokeEvent, args: any[]) => {

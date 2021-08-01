@@ -1,26 +1,6 @@
 import * as $ from 'jquery';
 import { ipcRenderer } from 'electron';
-
-$('#getProductBtn').on('click', () => {
-    const url: string | number | string[] | undefined = $('#urlBox').val();
-    if(!validateUrl(url)){
-        $('#validate').text('Link jest nieprawidłowy');
-        return;
-    }
-    $('#validate').text('');
-    getTitle(url as string);
-});
-
-$('#saveBtn').on('click', async () => {
-    const data = [$('#productName').text(), parseFloat($('#productPrice').text().replace(',', '.'))];
-    console.log(data);
-    await ipcRenderer.invoke('insertData', data);
-    // for testing
-    const dbData: ProductPriceData[] = await ipcRenderer.invoke('getData', [$('#productName').text()]);
-    dbData.forEach((value: ProductPriceData) => {
-        console.log(value);
-    })
-})
+import * as toastr from 'toastr';
 
 function getHTML(data: string, openingTag: string, closingTag: string): string {
     const productError = "Couldn't find product name!";
@@ -31,6 +11,15 @@ function getHTML(data: string, openingTag: string, closingTag: string): string {
     }
     const tag: string = matches[0];
     return tag.substring(tag.indexOf('>') + 1, tag.lastIndexOf('<'));
+}
+
+function setVisibility(element: string, visible: boolean){
+    if(!visible){
+        $(element).css('visibility', 'hidden');
+    }
+    else{
+        $(element).css('visibility', 'visible');
+    }
 }
 
 function validateUrl(url: string | number | string[] | undefined) : boolean{
@@ -56,13 +45,38 @@ function getTitle(url: string) {
             $('#productPrice').text(getHTML(data, '<div class="u7xnnm-4 jFbqvs">', '<\/div>'));
             const imagesHtml = getHTML(data, '<span class="sc-1tblmgq-0 jiiyfe-2 ldEQXA sc-1tblmgq-3 fHoITM"', '<\/span>');
             $('#productImage').html(imagesHtml.substring(imagesHtml.lastIndexOf('<'), imagesHtml.lastIndexOf('>') + 1));
+            setVisibility('#productBox', true);
         },
         error: function() {
-            $('#productName').text("");
-            $('#productPrice').text("");
-            $('#productImage').html("");
+            setVisibility('#productBox', false);
             $('#validate').text('Link jest nieprawidłowy');
         }
     });
 }
 
+$('#getProductBtn').on('click', () => {
+    const url: string | number | string[] | undefined = $('#urlBox').val();
+    if(!validateUrl(url)){
+        $('#validate').text('Link jest nieprawidłowy');
+        return;
+    }
+    $('#validate').text('');
+    getTitle(url as string);
+});
+
+$('#saveBtn').on('click', async () => {
+    const data = [$('#productName').text(), parseFloat($('#productPrice').text().replace(',', '.'))];
+    console.log(data);
+    await ipcRenderer.invoke('insertData', data);
+    toastr.success('Cena została zapisana', 'Sukces!', {
+        closeButton: true,
+        positionClass: 'toast-bottom-right'
+    });
+    // for testing
+    const dbData: ProductPriceData[] = await ipcRenderer.invoke('getData', [$('#productName').text()]);
+    dbData.forEach((value: ProductPriceData) => {
+        console.log(value);
+    })
+})
+
+setVisibility('#productBox', false);
