@@ -1,4 +1,3 @@
-import _default from "@popperjs/core/lib/modifiers/popperOffsets";
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import * as sqlite3 from 'sqlite3';
