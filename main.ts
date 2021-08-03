@@ -3,14 +3,13 @@ import * as path from "path";
 import * as sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 
-
 /* Uncomment if working with UI for hot reload
 try {
   require('electron-reloader')(module);
 } catch (_) {}
 */
-let window: BrowserWindow;
 
+let window: BrowserWindow;
 let db: Database<sqlite3.Database, sqlite3.Statement> | null = null;
 
 open({
@@ -32,12 +31,12 @@ app.on('ready', () => {
             contextIsolation: false
         },
     });
-    window.loadFile(path.join(__dirname, '../src/index/index.html'));
+    window.loadFile(path.join(__dirname, '../src/addData/addData.html'));
 });
 
-app.on('quit', async () => {
-    if(db == null) return;
-    //await db.close();
+app.on('window-all-closed', async () => {
+    await db?.close();
+    app.quit();
 })
 
 ipcMain.handle('insertData', async (event: Electron.IpcMainInvokeEvent, args: any[]) => {
